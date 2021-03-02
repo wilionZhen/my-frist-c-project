@@ -15,18 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Project2\Project2\Window.cpp">
+    <ClCompile Include="ChiliException.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Project2\Project2\WinMain.cpp">
+    <ClCompile Include="WinMain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Project2\Project2\ChiliWin.h">
+    <ClInclude Include="ChiliException.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Project2\Project2\window.h">
+    <ClInclude Include="window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliWin.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
