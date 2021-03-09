@@ -101,6 +101,23 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0;
+		//¼üÅÌ°´ÏÂ
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+		if((lParam&0x40000000)||keboard.AutorepeatIsEnabled()){
+			keboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+		}
+		break;
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		keboard.OnKeyReleased(static_cast<unsigned char>(wParam));
+		break;
+	case WM_CHAR:
+		keboard.OnChar(static_cast<char>(wParam));
+		break;
+	case WM_KILLFOCUS:
+		keboard.ClearState();
+		break;
 	default:
 		break;
 

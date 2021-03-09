@@ -1,7 +1,7 @@
 #pragma once
 #include "ChiliWin.h"
 #include "ChiliException.h"
-
+#include "Keyboard.h"
 
 
 class Window
@@ -44,6 +44,8 @@ private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+public:
+	Keyboard keboard;
 private:
 	bool cursorEnabled = true;
 	int width;

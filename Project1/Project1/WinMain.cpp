@@ -84,7 +84,9 @@ int CALLBACK  WinMain(
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-
+			if (wnd.keboard.KeyIsPressed(VK_MENU)) {
+				MessageBox(nullptr, "°´ÏÂ°´¼ü", "alt", MB_OK | MB_ICONEXCLAMATION);
+			}
 		}
 		if (gRegsult == -1) {
 			return -1;
