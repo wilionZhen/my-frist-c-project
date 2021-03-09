@@ -76,7 +76,7 @@ int CALLBACK  WinMain(
 	{
 		//×¢²á´°¿Ú
 		Window wnd(800, 300, "window fix");
-		Window wnd2(300, 600, "window fi2");
+		//Window wnd2(300, 600, "window fi2");
 
 		MSG msg;
 		BOOL gRegsult;

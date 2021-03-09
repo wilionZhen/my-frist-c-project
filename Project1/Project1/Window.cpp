@@ -1,5 +1,6 @@
 #include "window.h"
 #include <sstream>
+#include "resource.h"
 Window::WindowClass Window::WindowClass::wndClass;
 
 Window::WindowClass::WindowClass()noexcept:hInst(GetModuleHandle(nullptr))
@@ -11,12 +12,13 @@ Window::WindowClass::WindowClass()noexcept:hInst(GetModuleHandle(nullptr))
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetInstance();
-	wc.hIcon = nullptr;
+	
+	wc.hIcon = static_cast<HICON>(LoadImage(hInst, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, 0));
 	wc.hCursor = nullptr;
 	wc.hbrBackground = nullptr;
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = GetName();
-	wc.hIconSm = nullptr;
+	wc.hIconSm = static_cast<HICON>(LoadImage(hInst, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, 0));;
 	RegisterClassEx(&wc);
 }
 
@@ -42,12 +44,19 @@ Window::Window(int width, int height, const char * name)
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))) {
+		throw CHWWD_LAST_EXEP();
+	}
+
 	hWnd = CreateWindow(
 		WindowClass::GetName(), name,
 		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this);
+	if (hWnd==nullptr)
+	{
+		throw CHWWD_LAST_EXEP();
+	}
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
 
@@ -100,8 +109,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 }
 
 //Window Exception Stuff
-Window::Exception::Exception(int line, const char*file, HRESULT hr)noexcept 
-	:ChiliException(line,file),hr(hr)
+Window::Exception::Exception(int line, const char*file, HRESULT hr)noexcept
+	:
+	ChiliException(line, file),
+	hr(hr)
 {}
 
 char const * Window::Exception::what() const noexcept

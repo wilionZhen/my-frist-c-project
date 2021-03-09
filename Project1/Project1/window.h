@@ -8,6 +8,7 @@ class Window
 {
 public:
 	class Exception :public ChiliException {
+	public:
 		Exception(int line, const char*file,HRESULT hr) noexcept;
 		char const* what()const noexcept override;
 		virtual const char* GetType()const noexcept override;
@@ -50,4 +51,5 @@ private:
 	HWND hWnd;
 };
 
-#define CHWWD_EXCEPT(hr) Window::Exception(__LINE__,__FILE__.hr)
+#define CHWWD_EXCEPT(hr) Window::Exception(__LINE__,__FILE__,hr)
+#define CHWWD_LAST_EXEP(hr) Window::Exception(__LINE__,__FILE__,GetLastError())
