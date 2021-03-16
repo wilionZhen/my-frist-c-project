@@ -2,7 +2,9 @@
 #include "ChiliWin.h"
 #include "ChiliException.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 
+using namespace std;
 
 class Window
 {
@@ -39,6 +41,7 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
+	void SetTitle(const std::string& title);
 private:
 	
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -46,6 +49,7 @@ private:
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 public:
 	Keyboard keboard;
+	Mouse mouse;
 private:
 	bool cursorEnabled = true;
 	int width;
@@ -54,4 +58,4 @@ private:
 };
 
 #define CHWWD_EXCEPT(hr) Window::Exception(__LINE__,__FILE__,hr)
-#define CHWWD_LAST_EXEP(hr) Window::Exception(__LINE__,__FILE__,GetLastError())
+#define CHWWD_LAST_EXEP() Window::Exception(__LINE__,__FILE__,GetLastError())

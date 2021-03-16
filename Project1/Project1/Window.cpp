@@ -38,13 +38,16 @@ Window::WindowClass::~WindowClass()
 }
 
 Window::Window(int width, int height, const char * name)
+	:
+	width(width),
+	height(height)
 {
 	RECT wr;
 	wr.left = 100;
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))) {
+	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE)==0) {
 		throw CHWWD_LAST_EXEP();
 	}
 
@@ -63,6 +66,13 @@ Window::Window(int width, int height, const char * name)
 Window::~Window()
 {
 	DestroyWindow(hWnd);
+}
+
+void Window::SetTitle(const std::string & title)
+{
+	if (SetWindowText(hWnd, title.c_str()) == 0) {
+		throw CHWWD_LAST_EXEP();
+	}
 }
 
 LRESULT CALLBACK  Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
@@ -101,17 +111,44 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0;
-		//键盘按下
+		//键盘按下************************
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 		if((lParam&0x40000000)||keboard.AutorepeatIsEnabled()){
-			keboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+                 		keboard.OnKeyPressed(static_cast<unsigned char>(wParam));
 		}
 		break;
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 		keboard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
+		//鼠标移动************************
+	case WM_MOUSEMOVE:
+		const POINTS pt1 = MAKEPOINTS(lParam);
+		mouse.OnMouseMove(pt1.x, pt1.y);
+		break;
+	case WM_LBUTTONDOWN:
+		const POINTS pt2 = MAKEPOINTS(lParam);
+		mouse.OnLeftPressed(pt2.x, pt2.y);
+		break;
+	case WM_RBUTTONDOWN:
+		const POINTS pt3 = MAKEPOINTS(lParam);
+		mouse.OnRightPressed(pt3.x, pt3.y);
+		break;
+	case WM_LBUTTONUP:
+		const POINTS pt4 = MAKEPOINTS(lParam);
+		mouse.OnLeftReleased(pt4.x, pt4.y);
+		break;
+	case WM_RBUTTONUP:
+		const POINTS pt5 = MAKEPOINTS(lParam);
+		mouse.OnRightReleased(pt5.x, pt5.y);
+		break;
+	case WM_MOUSEWHEEL:{
+		const POINTS pt6 = MAKEPOINTS(lParam);
+		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		mouse.OnWheelDelta(pt6.x, pt6.y, delta);
+		break;
+	}
 	case WM_CHAR:
 		keboard.OnChar(static_cast<char>(wParam));
 		break;
