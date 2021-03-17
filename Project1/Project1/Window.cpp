@@ -123,32 +123,50 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		keboard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 		//鼠标移动************************
-	case WM_MOUSEMOVE:
-		const POINTS pt1 = MAKEPOINTS(lParam);
-		mouse.OnMouseMove(pt1.x, pt1.y);
-		break;
-	case WM_LBUTTONDOWN:
-		const POINTS pt2 = MAKEPOINTS(lParam);
-		mouse.OnLeftPressed(pt2.x, pt2.y);
-		break;
-	case WM_RBUTTONDOWN:
-		const POINTS pt3 = MAKEPOINTS(lParam);
-		mouse.OnRightPressed(pt3.x, pt3.y);
-		break;
-	case WM_LBUTTONUP:
-		const POINTS pt4 = MAKEPOINTS(lParam);
-		mouse.OnLeftReleased(pt4.x, pt4.y);
-		break;
-	case WM_RBUTTONUP:
-		const POINTS pt5 = MAKEPOINTS(lParam);
-		mouse.OnRightReleased(pt5.x, pt5.y);
-		break;
+	case WM_MOUSEMOVE: {
+		const POINTS pt = MAKEPOINTS(lParam);
+		if (pt.x >= 0 && pt.x < width&&pt.y >= 0 && pt.y < height) {
+			mouse.OnMouseMove(pt.x, pt.y);
+			if (!mouse.IsInWindow()) {
+				SetCapture(hWnd);
+				mouse.OnMouseEnter();
+			}
+		}
+		else
+		{
+			if (wParam&(MK_LBUTTON | MK_RBUTTON)) {
+				mouse.OnMouseMove(pt.x, pt.y);
+			}
+			else
+			{
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+			}
+		}
+		break; }
+	case WM_LBUTTONDOWN: {
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnLeftPressed(pt.x, pt.y);
+		break; }
+	case WM_RBUTTONDOWN: {
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnRightPressed(pt.x, pt.y);
+		break; }
+	case WM_LBUTTONUP: {
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnLeftReleased(pt.x, pt.y);
+		break; }
+	case WM_RBUTTONUP: {
+		const POINTS pt = MAKEPOINTS(lParam);
+		mouse.OnRightReleased(pt.x, pt.y);
+		break; }
 	case WM_MOUSEWHEEL:{
-		const POINTS pt6 = MAKEPOINTS(lParam);
+		const POINTS pt = MAKEPOINTS(lParam);
 		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
-		mouse.OnWheelDelta(pt6.x, pt6.y, delta);
+		mouse.OnWheelDelta(pt.x, pt.y, delta);
 		break;
 	}
+	//*************鼠标事件结束***************
 	case WM_CHAR:
 		keboard.OnChar(static_cast<char>(wParam));
 		break;

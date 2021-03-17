@@ -17,17 +17,22 @@ int CALLBACK  WinMain(
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-			if (wnd.keboard.KeyIsPressed(VK_SPACE)) {
-				MessageBox(nullptr, "按下按键", "alt", MB_OK | MB_ICONEXCLAMATION);
-			}
+			
 			while (!wnd.mouse.IsEmpty())
 			{
 				const auto e= wnd.mouse.Read();
-				if (e->GetType() == Mouse::Event::Type::Move) {
+				switch (e->GetType())
+				{
+				case Mouse::Event::Type::Leave:
+					wnd.SetTitle("在窗口外");
+					break;
+				case Mouse::Event::Type::Move: {
 					std::ostringstream oss;
-					oss << "Mouse Position:(" << e->GetPosX() << "," << e->GetPosY();
+					oss << "在窗口内移动:(" << wnd.mouse.GetPosX() << "," << wnd.mouse.GetPosY() << ")";
 					wnd.SetTitle(oss.str());
-				}
+
+					break; }
+				} 
 			}
 		}
 		
