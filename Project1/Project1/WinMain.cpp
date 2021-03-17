@@ -10,7 +10,7 @@ int CALLBACK  WinMain(
 	{
 		//×¢²á´°¿Ú
 		Window wnd(800, 300, "window fix");
-
+		//test
 		MSG msg;
 		BOOL gRegsult;
 		while ((gRegsult = GetMessage(&msg, nullptr, 0, 0)) > 0)
