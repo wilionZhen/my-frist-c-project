@@ -106,6 +106,7 @@ private:
 	bool leftIsPressed = false;
 	bool rightIsPressed = false;
 	bool isInWindow = false;
+	//¹öÂÖ×ÜÐý×ªÖµ
 	int wheelDeltaCarry = 0;
 	bool rawEnabled = false;
 	std::queue<Event> buffer;

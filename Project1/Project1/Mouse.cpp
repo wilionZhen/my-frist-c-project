@@ -166,7 +166,7 @@ void Mouse::TrimRawInputBuffer() noexcept
 		rawDeltaBuffer.pop();
 	}
 }
-
+//ÅĞ¶Ï¹öÂÖÊıÖµ
 void Mouse::OnWheelDelta(int x, int y, int delta) noexcept
 {
 	wheelDeltaCarry += delta;
